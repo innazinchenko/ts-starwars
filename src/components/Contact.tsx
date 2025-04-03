@@ -2,7 +2,7 @@ import '../Contact.css'
 import {useContext, useEffect, useState} from "react";
 import {base_url, characters, defaultHero, period_month} from "../utils/constants.js";
 import {Planet} from "../utils/types";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {SWContext} from "../utils/context.ts";
 
 const Contact = () => {
@@ -10,13 +10,14 @@ const Contact = () => {
 
     let {heroId = defaultHero} = useParams();
     const{changeHero} = useContext(SWContext);
+    const redirect = useNavigate();
 
     useEffect(() => {
-        if(!characters[heroId]){
-            heroId = defaultHero;
+        if(!characters[heroId] || !heroId ){
+            redirect('error');
         }
         changeHero(heroId);
-    }, []);
+    }, [heroId, redirect, changeHero]);
 
     async function fetchPlanets(url: string) {
         const response = await fetch(url);

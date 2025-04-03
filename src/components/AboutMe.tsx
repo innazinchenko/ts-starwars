@@ -1,17 +1,18 @@
 import {characters, defaultHero, period_month} from "../utils/constants.ts";
 import {useContext, useEffect, useState} from "react";
 import {HeroInfo} from "../utils/types";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {SWContext} from "../utils/context.ts";
 
 const AboutMe = () => {
     const [hero, setHero] = useState<HeroInfo>();
     let {heroId = defaultHero} = useParams();
     const{changeHero} = useContext(SWContext);
+    const redirect = useNavigate();
 
     useEffect(() => {
-        if(!characters[heroId]){
-            heroId = defaultHero;
+        if(!characters[heroId] || !heroId){
+            redirect('error');
         }
         changeHero(heroId);
         const hero = JSON.parse(localStorage.getItem(heroId)!);

@@ -1,5 +1,5 @@
 import {characters, defaultHero} from "../utils/constants.ts";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {useContext, useEffect} from "react";
 import {SWContext} from "../utils/context.ts";
 import Hero from "./Hero.tsx";
@@ -9,13 +9,16 @@ import FarGalaxy from "./FarGalaxy.tsx";
 const Home = () => {
     let {heroId = defaultHero} = useParams();
     const{changeHero} = useContext(SWContext);
+    const redirect = useNavigate();
+
+
 
     useEffect(() => {
-        if(!characters[heroId]){
-            heroId = defaultHero;
+        if(!characters[heroId] || !heroId ){
+            redirect('error');
         }
         changeHero(heroId);
-    }, [heroId]);
+    }, [heroId, redirect, changeHero]);
     return (
         <main className="clearfix">
             <Hero/>
